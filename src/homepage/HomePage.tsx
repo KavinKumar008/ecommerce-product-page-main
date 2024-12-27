@@ -5,9 +5,9 @@ import { ShoeImage } from "../shoeimages/ShoeImage";
 import plus from "../assets/icon-plus.jpg";
 import minus from "../assets/icon-minus.jpg";
 import { IoCartOutline } from "react-icons/io5";
-import previous from "../assets/icon-previous.jpg";
-import next from "../assets/icon-next.jpg";
-import menu from "../assets/icon-menu.jpg";
+// import previous from "../assets/icon-previous.jpg";
+// import next from "../assets/icon-next.jpg";
+// import menu from "../assets/icon-menu.jpg";
 import { useState } from "react";
 import { Shoe } from "../types/Shoe";
 import PopOver from "../popover/PopOver";
@@ -74,11 +74,11 @@ const HomePage = () => {
       <section className="flex justify-between items-center py-6 px-28 cursor-pointer border-b border-gray-300 max-sm:p-4">
         <div className="flex gap-8">
           <div className="flex items-center gap-5">
-            <img
+            {/* <img
               src={menu}
               alt="menubar"
               className="w-[18px] object-contain max-sm:visible cursor-pointer"
-            />
+            /> */}
             <h1 className="text-3xl font-bold tracking-tighter max-sm:text-4xl">
               sneakers
             </h1>
@@ -123,8 +123,8 @@ const HomePage = () => {
       <section className="flex p-8 max-sm:block max-sm:p-0">
         <div className="w-[50%] flex flex-col items-center justify-center gap-5 p-8 max-sm:w-screen max-sm:p-0 max-sm:gap-0">
           <div className="flex items-center justify-between absolute right-0 left-0">
-            <img src={previous} alt="" className="w-[15px]" />
-            <img src={next} alt="" className="w-[15px]" />
+            {/* <img src={previous} alt="" className="w-[15px]" />
+            <img src={next} alt="" className="w-[15px]" /> */}
           </div>
           <img
             src={selectedImage}
