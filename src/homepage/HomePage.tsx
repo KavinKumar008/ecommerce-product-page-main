@@ -10,14 +10,18 @@ import next from "../assets/icon-next.jpg";
 import menu from "../assets/icon-menu.jpg";
 import { useState } from "react";
 import { Shoe } from "../types/Shoe";
+import PopOver from "../popover/PopOver";
 
 const HomePage = () => {
   const [selectedImage, setSelectedImage] = useState<string | "">(product1);
   const [storingData, setStoringData] = useState<Shoe[] | []>([]);
-  const [count, setCount] = useState<number>(1);
+  const [count, setCount] = useState<number>(0);
+  const [profileClick, setProfileClick] = useState("");
+  const [popOverOpen, setPopOverOpen] = useState<boolean>(false);
+  const [selectedId, setSelectedId] = useState();
 
   const handleSelected = (item) => {
-    console.log(item.id);
+    setSelectedId(item.id);
     setStoringData((prev) => {
       const isAlreadySelected = prev.some((shoe) => shoe.id === item.id);
       if (isAlreadySelected) {
@@ -27,23 +31,47 @@ const HomePage = () => {
       }
     });
   };
+  console.log(storingData);
+  // console.log(selectedId);
 
   const handleIncrement = () => {
     setCount((curr) => curr + 1);
+    setStoringData((prevItem) =>
+      prevItem.map((shoe) =>
+        shoe.id === selectedId
+          ? { ...shoe, count: (shoe.count || 1) + 1 }
+          : shoe
+      )
+    );
   };
 
   const handleDecrement = () => {
-    setCount((curr) => Math.max(curr - 1, 1));
+    setCount((curr) => Math.max(curr - 1, 0));
+    setStoringData((prevItem) =>
+      prevItem.map((shoe) =>
+        shoe.id === selectedId
+          ? { ...shoe, count: Math.max((shoe.count || 1) - 1, 1) }
+          : shoe
+      )
+    );
   };
 
-  const handleProfile = () => {
-    console.log("hii kavin");
-    setStoringData(storingData);
-  };
   console.log(count);
+  console.log(storingData);
+
+  const handleProfile = () => {
+    profileClick === "" ? setProfileClick("click") : setProfileClick("");
+  };
+
+  const handlePopOver = () => {
+    setPopOverOpen(true);
+    // console.log(popOverOpen);
+  };
+
+  // console.log(count);
   return (
     <main>
-      <section className="flex justify-between items-center py-6 px-24  cursor-pointer border-b border-gray-300 max-sm:p-4">
+      <section className="flex justify-between items-center py-6 px-28 cursor-pointer border-b border-gray-300 max-sm:p-4">
         <div className="flex gap-8">
           <div className="flex items-center gap-5">
             <img
@@ -64,17 +92,28 @@ const HomePage = () => {
           </div>
         </div>
         <div className="flex gap-6">
-          <img
-            src={cart}
-            alt="cartimg"
-            className="w-[20px] h-auto object-contain max-sm:w-[25px]"
-          />
+          <PopOver
+            popOverOpen={popOverOpen}
+            setPopOverOpen={setPopOverOpen}
+            storingData={storingData}
+            selectedImage={selectedImage}
+            count={count}
+            selectedId={selectedId}
+            setCount={setCount}
+          >
+            <img
+              src={cart}
+              alt="cartimg"
+              className="w-[20px] h-auto object-contain max-sm:w-[25px] cursor-pointer"
+              onClick={handlePopOver}
+            />
+          </PopOver>
           <img
             src={avatar}
             alt="profile"
             className={`w-[50px] h-auto max-sm:w-[35px] ${
-              storingData
-                ? "border-2 border-orange-600 rounder-full"
+              profileClick
+                ? "rounded-full border-2 border-orange-600"
                 : "border-transparent"
             }`}
             onClick={handleProfile}
@@ -97,7 +136,10 @@ const HomePage = () => {
               <div
                 key={item.id}
                 className=""
-                onClick={() => setSelectedImage(item.image)}
+                onClick={() => {
+                  setSelectedImage(item.image);
+                  console.log(item.id);
+                }}
               >
                 <img
                   src={item.image}
@@ -107,7 +149,6 @@ const HomePage = () => {
                       ? "border-2 border-orange-500 opacity-20"
                       : "border-transparent"
                   }`}
-                  onClick={() => handleSelected(item)}
                 />
               </div>
             ))}
@@ -160,7 +201,10 @@ const HomePage = () => {
                 onClick={handleIncrement}
               />
             </div>
-            <div className="w-[200px] flex items-center justify-center gap-3 bg-orange-400 p-2 rounded-lg cursor-pointer max-sm:w-full max-sm:p-3">
+            <div
+              className="w-[200px] flex items-center justify-center gap-3 bg-orange-400 p-2 rounded-lg cursor-pointer max-sm:w-full max-sm:p-3"
+              onClick={() => handleSelected(item)}
+            >
               <IoCartOutline className="font-medium" />
               <p className="text-sm font-semibold">Add to cart</p>
             </div>
